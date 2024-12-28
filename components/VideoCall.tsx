@@ -101,7 +101,7 @@ export default function VideoCall() {
   };
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div className="relative h-screen md:h-[90dvh] w-full overflow-hidden">
       {/* Main Remote Video (Full Screen) */}
       <div className="absolute inset-0 bg-gray-900">
         <video
