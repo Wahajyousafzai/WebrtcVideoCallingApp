@@ -101,7 +101,7 @@ export default function VideoCall() {
   };
 
   return (
-    <div className="relative h-screen md:h-[90dvh] w-full overflow-hidden">
+    <div className="relative h-screen md:h-[90dvh] aspect-video overflow-hidden">
       {/* Main Remote Video (Full Screen) */}
       <div className="absolute inset-0 bg-gray-900">
         <video
@@ -113,7 +113,7 @@ export default function VideoCall() {
       </div>
 
       {/* Local Video (Larger Overlay) */}
-      <div className="absolute top-6 right-6 w-[320px] aspect-video rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 backdrop-blur">
+      <div className="absolute top-6 right-6 w-[220px] aspect-video rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 backdrop-blur">
         <video
           ref={localVideoRef}
           autoPlay
