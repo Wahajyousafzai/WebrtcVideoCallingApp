@@ -10,13 +10,15 @@ export default function VideoChat() {
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null)
   const [peerId, setPeerId] = useState<string>('')
   const [callStatus, setCallStatus] = useState<'idle' | 'calling' | 'connected'>('idle')
+  const [isAudioMuted, setIsAudioMuted] = useState(false)
+  const [isVideoDisabled, setIsVideoDisabled] = useState(false)
   const peerRef = useRef<Peer | null>(null)
 
   useEffect(() => {
     const initPeer = async () => {
       const peer = new Peer()
       peer.on('open', (id) => setPeerId(id))
-
+      
       peer.on('call', (call) => {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
           .then((stream) => {
@@ -59,21 +61,51 @@ export default function VideoChat() {
     setCallStatus('idle')
   }
 
+  const toggleAudio = () => {
+    if (localStream) {
+      const audioTrack = localStream.getAudioTracks()[0]
+      audioTrack.enabled = !audioTrack.enabled
+      setIsAudioMuted(!audioTrack.enabled)
+    }
+  }
+
+  const toggleVideo = () => {
+    if (localStream) {
+      const videoTrack = localStream.getVideoTracks()[0]
+      videoTrack.enabled = !videoTrack.enabled
+      setIsVideoDisabled(!videoTrack.enabled)
+    }
+  }
+
   return (
-    <div className="bg-white rounded-xl shadow-2xl overflow-hidden max-w-4xl w-full">
-      <div className="p-6 bg-indigo-600 text-white">
-        <h1 className="text-2xl font-bold">WebRTC Video Chat</h1>
-        <p className="text-indigo-200">Your Peer ID: {peerId}</p>
-      </div>
-      <div className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <VideoStream stream={localStream} muted label="You" />
-          <VideoStream stream={remoteStream} label="Remote" />
+    <div className="relative h-screen w-full bg-gray-900 overflow-hidden">
+      {remoteStream && (
+        <VideoStream
+          stream={remoteStream}
+          label="Remote"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
+      {localStream && (
+        <div className="absolute top-4 right-4 w-1/3 max-w-[200px] aspect-video">
+          <VideoStream
+            stream={localStream}
+            label="You"
+            muted
+            className="w-full h-full object-cover rounded-lg shadow-lg"
+          />
         </div>
+      )}
+      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
         <CallControls
           startCall={startCall}
           endCall={endCall}
+          toggleAudio={toggleAudio}
+          toggleVideo={toggleVideo}
+          isAudioMuted={isAudioMuted}
+          isVideoDisabled={isVideoDisabled}
           callStatus={callStatus}
+          peerId={peerId}
         />
       </div>
     </div>

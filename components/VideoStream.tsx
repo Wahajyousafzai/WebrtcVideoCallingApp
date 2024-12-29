@@ -4,9 +4,10 @@ interface VideoStreamProps {
   stream: MediaStream | null
   muted?: boolean
   label: string
+  className?: string
 }
 
-export default function VideoStream({ stream, muted = false, label }: VideoStreamProps) {
+export default function VideoStream({ stream, muted = false, label, className = '' }: VideoStreamProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
@@ -16,15 +17,15 @@ export default function VideoStream({ stream, muted = false, label }: VideoStrea
   }, [stream])
 
   return (
-    <div className="relative">
+    <div className={`relative ${className}`}>
       <video
         ref={videoRef}
         autoPlay
         playsInline
         muted={muted}
-        className="w-full h-[300px] object-cover rounded-lg bg-gray-200"
+        className="w-full h-full object-cover"
       />
-      <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded">
+      <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
         {label}
       </div>
     </div>
