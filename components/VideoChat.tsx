@@ -10,13 +10,13 @@ export default function VideoChat() {
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null)
   const [peerId, setPeerId] = useState<string>('')
   const [callStatus, setCallStatus] = useState<'idle' | 'calling' | 'connected'>('idle')
-  const peerRef = useRef<Peer>()
+  const peerRef = useRef<Peer | null>(null)
 
   useEffect(() => {
     const initPeer = async () => {
       const peer = new Peer()
       peer.on('open', (id) => setPeerId(id))
-      
+
       peer.on('call', (call) => {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
           .then((stream) => {
